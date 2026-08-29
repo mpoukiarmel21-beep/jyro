@@ -9,7 +9,9 @@
 - **Partage → Jyro** : sélectionne un texte, touche *Partager*, choisis Jyro. Le petit volet traduit instantanément (détection auto de la langue) avec bouton **Réessayer**.
 - **Réponse rapide** : écris ta réponse en français, Jyro la traduit dans la langue cible et la copie automatiquement — prête à coller.
 - **Clavier Jyro** : un vrai clavier qui **répond directement dans la conversation** (WhatsApp, Telegram, OnlyFans, SMS…) : [📋 Copié] charge le message et détecte sa langue, tu écris ta réponse, [▶ Répondre] l'insère dans le champ déjà traduite. Toggle « ✍️ Auto » pour écrire automatiquement.
-- **App principale** : traduction (coller/écrire), onglet `Répondre`, historique (100 dernières), réglages.
+- **Carte flottante (gamme PLAYit)** : Jyro fabrique une petite vidéo de ta traduction et la lance en **Picture-in-Picture** → la carte flotte **au-dessus de toutes les apps** (WhatsApp, YouTube…) tant que tu ne la fermes pas. Accessible via le bouton « Flotter » après une traduction ou dans l'onglet Bouton.
+- **Détection auto du copié** : tu copies un message, tu ouvres Jyro → il est rempli et traduit automatiquement.
+- **App principale** : traduction (coller/écrire), onglet `Bouton flottant`, historique (100 dernières), réglages.
 - **Interrupteur Centre de contrôle** (iOS 18+) : « Mode rapide Jyro » dans la zone torche/économiseur.
 - **Lecture vocale** (TTS système, gratuit).
 - **Moteur gratuit** : réseaux neuronaux Google (endpoints gtx + dict-chrome-ex, sans clé) + secours MyMemory. Aucun compte, aucune clé API.
