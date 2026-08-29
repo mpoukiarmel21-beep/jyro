@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct JyroApp: App {
     @StateObject private var model = AppModel()
+    @Environment(\.scenePhase) private var scenePhase
     @State private var onboarded = UserDefaults.standard.bool(forKey: "jyro.onboarded")
 
     var body: some Scene {
@@ -23,6 +24,11 @@ struct JyroApp: App {
                     model.openShareLink(query)
                 }
                 .task { model.loadHistories() }
+                .onChange(of: scenePhase) { _, phase in
+                    if phase == .active {
+                        model.autoDetectClipboard()
+                    }
+                }
         }
     }
 }

@@ -28,6 +28,8 @@ struct OnboardingView: View {
                                    text: "Sélectionne un texte → Partager → Jyro : traduction instantanée. Aucune autorisation à donner.")
                         featureRow(icon: "arrow.up.message.fill", title: "Réponds direct",
                                    text: "Écris ta réponse, Jyro la traduit et la copie prête à coller.")
+                        featureRow(icon: "pip.fill", title: "Carte flottante",
+                                   text: "Fais flotter ta traduction au-dessus de toutes les apps, comme une vidéo en réduit (gamme PLAYit).")
                         featureRow(icon: "bolt.fill", title: "Gratuit, sans clé",
                                    text: "Réseaux neuronaux Google + secours MyMemory. Aucun compte.")
                     }
