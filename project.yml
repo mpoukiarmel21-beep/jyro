@@ -14,7 +14,7 @@ settings:
     CODE_SIGN_STYLE: Manual
     DEVELOPMENT_TEAM: ""
     GENERATE_INFOPLIST_FILE: NO
-    CURRENT_PROJECT_VERSION: 2
+    CURRENT_PROJECT_VERSION: 3
     MARKETING_VERSION: 1.0.0
     IPHONEOS_DEPLOYMENT_TARGET: 17.0
     TARGETED_DEVICE_FAMILY: "1"
@@ -51,6 +51,8 @@ targets:
       - target: JyroTranslate
         embed: true
       - target: JyroControl
+        embed: true
+      - target: JyroKeyboard
         embed: true
   JyroTranslate:
     type: app-extension
@@ -90,5 +92,26 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.jyro.app.control
+        APPLICATION_EXTENSION_API_ONLY: YES
+        SKIP_INSTALL: YES
+  JyroKeyboard:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Keyboard
+      - path: SharedCore
+    info:
+      path: Keyboard/Info.plist
+      properties:
+        CFBundleDisplayName: Jyro
+        NSExtension:
+          NSExtensionAttributes:
+            RequestsOpenAccess: true
+          NSExtensionPointIdentifier: com.apple.keyboard-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).KeyboardViewController
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jyro.app.keyboard
         APPLICATION_EXTENSION_API_ONLY: YES
         SKIP_INSTALL: YES

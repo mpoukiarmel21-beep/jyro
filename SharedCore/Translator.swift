@@ -99,8 +99,15 @@ final class Translator: @unchecked Sendable {
         do {
             return try await google(trimmed, to: target)
         } catch {
-            let from = LanguageKit.guess(trimmed)
-            return try await myMemory(trimmed, from: from, to: target)
+            if let retryable = error as? TranslateError, case .bad = retryable {
+                try? await Task.sleep(nanoseconds: 400_000_000)
+            }
+            do {
+                return try await googleB(trimmed, to: target)
+            } catch {
+                let from = LanguageKit.guess(trimmed)
+                return try await myMemory(trimmed, from: from, to: target)
+            }
         }
     }
 
@@ -117,6 +124,7 @@ final class Translator: @unchecked Sendable {
         guard let url = components.url else { throw TranslateError.bad("URL invalide.") }
         var request = URLRequest(url: url)
         request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)", forHTTPHeaderField: "User-Agent")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
         let (data, response) = try await session.data(for: request)
         if let http = response as? HTTPURLResponse, http.statusCode != 200 {
             throw TranslateError.bad("Google \(http.statusCode)")
@@ -142,6 +150,35 @@ final class Translator: @unchecked Sendable {
             return TranslationResult(text: translated, detectedLanguage: array[safe: 2] as? String, engine: "Google")
         }
         throw TranslateError.bad("Réponse illisible de Google.")
+    }
+
+    private func googleB(_ text: String, to target: String) async throws -> TranslationResult {
+        var components = URLComponents(string: "https://clients5.google.com/translate_a/t")!
+        components.queryItems = [
+            URLQueryItem(name: "client", value: "dict-chrome-ex"),
+            URLQueryItem(name: "sl", value: "auto"),
+            URLQueryItem(name: "tl", value: target),
+            URLQueryItem(name: "q", value: text)
+        ]
+        guard let url = components.url else { throw TranslateError.bad("URL invalide.") }
+        var request = URLRequest(url: url)
+        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)", forHTTPHeaderField: "User-Agent")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        let (data, response) = try await session.data(for: request)
+        if let http = response as? HTTPURLResponse, http.statusCode != 200 {
+            throw TranslateError.bad("Google2 \(http.statusCode)")
+        }
+        if let array = try? JSONSerialization.jsonObject(with: data) as? [[Any]],
+           let rows = array.first as? [[Any]] {
+            let parts = rows.compactMap { row -> String? in
+                guard let segment = row.first as? String, !segment.isEmpty else { return nil }
+                return segment
+            }
+            let translated = parts.joined()
+            guard !translated.isEmpty else { throw TranslateError.bad("Traduction vide.") }
+            return TranslationResult(text: translated, detectedLanguage: array[safe: 2] as? String, engine: "Google")
+        }
+        throw TranslateError.bad("Réponse illisible de Google (2).")
     }
 
     private func myMemory(_ text: String, from: String, to: String) async throws -> TranslationResult {

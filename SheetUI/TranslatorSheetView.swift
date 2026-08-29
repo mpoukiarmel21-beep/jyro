@@ -156,6 +156,13 @@ struct TranslatorSheetView: View {
             Text(model.errorText)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+            Spacer()
+            Button("Réessayer") {
+                model.translate()
+            }
+            .font(.caption.weight(.bold))
+            .buttonStyle(.bordered)
+            .tint(JyroTheme.accent)
         }
         .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
