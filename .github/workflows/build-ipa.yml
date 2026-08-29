@@ -34,6 +34,8 @@ jobs:
         run: |
           xcodebuild -version
           swift --version
+          echo "--- control/widget frameworks in SDK ---"
+          ls /Applications/Xcode*.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS*.sdk/System/Library/Frameworks | grep -iE 'control|widget|appintent' || true
 
       - name: Build unsigned
         run: |

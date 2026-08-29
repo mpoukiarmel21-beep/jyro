@@ -1,6 +1,13 @@
 import AppIntents
-import ControlCenter
 import SwiftUI
+
+#if canImport(ControlCenter)
+import ControlCenter
+#endif
+
+#if canImport(ControlCenterUI)
+import ControlCenterUI
+#endif
 
 @main
 struct JyroControlWidget: ControlWidget {
