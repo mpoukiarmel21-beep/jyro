@@ -13,7 +13,7 @@ struct SettingsView: View {
                 )) {
                     Label("Mode rapide", systemImage: "control")
                 }
-                Text("Ajoute un interrupteur Jyro au Centre de contrôle (zone torche / économiseur) pour armer ou désarmer la traduction rapide.")
+                Text("Ajoute l'interrupteur Jyro dans le Centre de contrôle (zone torche / économiseur). Note : iOS interdit toute app d'afficher un bouton flottant par-dessus les autres apps — c'est pourquoi Jyro passe par le menu Partager et le clavier.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

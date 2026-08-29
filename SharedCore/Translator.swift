@@ -67,11 +67,23 @@ enum LanguageKit {
         if hangul > 0 { return "ko" }
         if kana > 0 { return "ja" }
         if cjk > 0 { return "zh-CN" }
-        let lower = text.lowercased()
-        let markers = ["le ", "la ", "les ", "des ", "que ", "qui ", "dans ", "pour ", "vous ", "une ", "est ", "mon ", "ma ", "nous "]
-        for marker in markers where lower.contains(marker) {
-            return "fr"
-        }
+        let lower = text.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        let sample = String(lower.prefix(80))
+
+        let fr = ["salut", "bonjour", "bonsoir", "merci", "comment", "pourquoi", "votre", "nous ", "vous ", "une ",
+                  " est", " les ", " des ", " que ", " qui ", " dans ", " avec ", " pour ", " sur ", " veut ",
+                  " aime ", " crois ", " toujours", " aujourd"]
+        let es = ["hola", "gracias", "como", "qué", "porque", "usted", "nosotros", " para ", " el ", " la ",
+                  " con ", " muy ", " bien ", " bueno", " siempre", " amo ", " quiero", " nada"]
+        let de = ["bitte", "danke", "und ", "der ", "die ", "das ", "ich ", "du ", "wie ", "nicht ",
+                  " sehr ", "immer", "guten", "kein"]
+        for marker in fr where sample.contains(marker) { return "fr" }
+        for marker in es where sample.contains(marker) { return "es" }
+        for marker in de where sample.contains(marker) { return "de" }
+
+        let en = ["the ", "and ", "you ", "that ", "what ", "with ", "your ", "hello", "thanks", "please",
+                  "where", "because", "always", "today", " love ", " want ", " think", " know ", "how ", "are "]
+        for marker in en where sample.contains(marker) { return "en" }
         return "en"
     }
 }
@@ -105,10 +117,20 @@ final class Translator: @unchecked Sendable {
             do {
                 return try await googleB(trimmed, to: target)
             } catch {
-                let from = LanguageKit.guess(trimmed)
-                return try await myMemory(trimmed, from: from, to: target)
+                let guessed = LanguageKit.guess(trimmed)
+                if areSameLanguage(guessed, target) {
+                    return TranslationResult(text: trimmed, detectedLanguage: guessed, engine: "Aucune")
+                }
+                return try await myMemory(trimmed, from: guessed, to: target)
             }
         }
+    }
+
+    private func areSameLanguage(_ a: String, _ b: String) -> Bool {
+        let a = a.lowercased(), b = b.lowercased()
+        if a == b { return true }
+        if a.hasPrefix("zh") && b.hasPrefix("zh") { return true }
+        return false
     }
 
     private func google(_ text: String, to target: String) async throws -> TranslationResult {
@@ -195,6 +217,13 @@ final class Translator: @unchecked Sendable {
         if let responseData = json["responseData"] as? [String: Any],
            let translated = responseData["translatedText"] as? String,
            !translated.isEmpty {
+            let upper = translated.uppercased()
+            if upper.contains("PLEASE SELECT TWO DISTINCT LANGUAGES")
+                || upper.contains("MYMEMORY WARNING")
+                || upper.contains("QUERY LENGTH LIMIT")
+                || upper.contains("NOT SUPPORTED") {
+                throw TranslateError.bad("MyMemory indisponible, réessaie.")
+            }
             return TranslationResult(text: translated, detectedLanguage: nil, engine: "MyMemory")
         }
         throw TranslateError.bad("MyMemory indisponible, réessaie.")

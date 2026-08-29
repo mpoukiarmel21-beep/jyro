@@ -401,6 +401,11 @@ final class KeyboardViewController: UIInputViewController {
         Task {
             do {
                 let out = try await translator.translate(q, to: targetCode)
+                if out.text == q {
+                    self.status("« \(q) » est déjà en \(LanguageKit.name(for: self.targetCode))")
+                    self.setBusy(false)
+                    return
+                }
                 if autoInsert {
                     textDocumentProxy.insertText(out.text)
                     box.text = ""
