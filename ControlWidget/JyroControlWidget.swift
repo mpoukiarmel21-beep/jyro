@@ -1,22 +1,40 @@
 import AppIntents
 import SwiftUI
-
-#if canImport(ControlCenter)
-import ControlCenter
-#endif
-
-#if canImport(ControlCenterUI)
-import ControlCenterUI
-#endif
+import WidgetKit
 
 @main
 struct JyroControlWidget: ControlWidget {
+    static let kind = "com.jyro.app.quickmode-control"
+
     var body: some ControlWidgetConfiguration {
-        ToggleControlIntentWidget(kind: "com.jyro.app.quickmode-control") {
-            Label("Jyro", systemImage: "character.bubble.fill")
-        } intent: {
-            JyroQuickModeIntent()
+        StaticControlConfiguration(
+            kind: Self.kind,
+            provider: QuickModeProvider()
+        ) { isOn in
+            ControlWidgetToggle(
+                "Traduction rapide",
+                isOn: isOn,
+                action: JyroQuickModeIntent()
+            ) { isOn in
+                Label(
+                    isOn ? "Mode rapide actif" : "Mode rapide",
+                    systemImage: isOn ? "character.bubble.fill" : "character.bubble"
+                )
+            }
+            .tint(.purple)
         }
+        .displayName("Jyro · Traduction rapide")
+        .description("Active ou désactive le mode traduction rapide.")
+    }
+}
+
+struct QuickModeProvider: ControlValueProvider {
+    var previewValue: Bool {
+        QuickMode.isOn
+    }
+
+    func currentValue() async throws -> Bool {
+        QuickMode.isOn
     }
 }
 
