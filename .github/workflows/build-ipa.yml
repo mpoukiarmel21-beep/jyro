@@ -25,7 +25,14 @@ jobs:
 
       - name: Resolve Xcode
         run: |
-          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | head -1)"
+          echo "--- installed Xcodes ---"
+          ls -d /Applications/Xcode*.app 2>/dev/null || true
+          SEL="$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)"
+          echo "Selected: $SEL"
+          if [ -n "$SEL" ]; then
+            sudo xcode-select -s "$SEL"
+          fi
+          xcodebuild -version
 
       - name: Generate project
         run: xcodegen generate
@@ -34,8 +41,11 @@ jobs:
         run: |
           xcodebuild -version
           swift --version
-          echo "--- control/widget frameworks in SDK ---"
-          ls /Applications/Xcode*.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS*.sdk/System/Library/Frameworks | grep -iE 'control|widget|appintent' || true
+          echo "--- where does ControlWidget live? ---"
+          grep -rl "enum ToggleControlIntentWidget\|struct ToggleControlIntentWidget\|protocol ControlWidget" \
+            /Applications/Xcode*.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS*.sdk/System/Library/Frameworks/*.framework/Modules/*.swiftmodule/*.swiftinterface \
+            2>/dev/null | head -5 || true
+          ls /Applications/Xcode*.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS*.sdk/System/Library/Frameworks | grep -iE 'control' || true
 
       - name: Build unsigned
         run: |
