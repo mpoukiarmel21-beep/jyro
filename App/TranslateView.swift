@@ -3,9 +3,6 @@ import SwiftUI
 struct TranslateView: View {
     @EnvironmentObject var model: AppModel
     @State private var showTargetPicker = false
-    @State private var showFloat = false
-
-    private var floating = FloatingTranslate.shared
 
     var body: some View {
         ScrollView {
@@ -31,22 +28,6 @@ struct TranslateView: View {
             LanguagePickerView(current: model.target) { code in
                 model.setTarget(code)
             }
-        }
-        .sheet(isPresented: $showFloat) {
-            NavigationView {
-                FloatPlayerView(floating: floating)
-                    .ignoresSafeArea()
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Fermer") {
-                                floating.stop()
-                                showFloat = false
-                            }
-                        }
-                    }
-            }
-            .preferredColorScheme(.dark)
         }
     }
 
@@ -201,18 +182,6 @@ struct TranslateView: View {
                 }
                 actionButton("Écouter", "speaker.wave.2.fill") {
                     Speaker.shared.speak(model.result, language: model.target)
-                }
-                if model.floatOn {
-                    actionButton("Flotter", "pip.fill") {
-                        let card = TranslationCard.render(
-                            source: model.source,
-                            result: model.result,
-                            targetName: LanguageKit.name(for: model.target),
-                            detected: model.detectedCode.map { LanguageKit.name(for: $0) }
-                        )
-                        floating.start(card: card)
-                        showFloat = true
-                    }
                 }
                 actionButton("Effacer", "xmark.circle.fill") {
                     model.clearResult()

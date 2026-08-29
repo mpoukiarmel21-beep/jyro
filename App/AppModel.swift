@@ -10,7 +10,6 @@ final class AppModel: ObservableObject {
     @Published var errorText = ""
     @Published var histories: [HistoryEntry] = []
     @Published var quickMode = QuickMode.isOn
-    @Published var floatOn = UserDefaults.standard.object(forKey: "jyro.floatOn") as? Bool ?? true
     @Published var autoTranslate = UserDefaults.standard.object(forKey: "jyro.autoTranslate") as? Bool ?? true
 
     private let translator = Translator.shared
@@ -36,16 +35,6 @@ final class AppModel: ObservableObject {
     func setQuickMode(_ on: Bool) {
         QuickMode.set(on)
         quickMode = QuickMode.isOn
-    }
-
-    var resultNonEmpty: String? {
-        let trimmed = result.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? nil : trimmed
-    }
-
-    func setFloatOn(_ on: Bool) {
-        floatOn = on
-        UserDefaults.standard.set(on, forKey: "jyro.floatOn")
     }
 
     func setAutoTranslate(_ on: Bool) {

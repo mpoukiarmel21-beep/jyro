@@ -13,7 +13,17 @@ struct SettingsView: View {
                 )) {
                     Label("Mode rapide", systemImage: "control")
                 }
-                Text("Ajoute l'interrupteur Jyro dans le Centre de contrôle (zone torche / économiseur). Note : iOS interdit toute app d'afficher un bouton flottant par-dessus les autres apps — c'est pourquoi Jyro passe par le menu Partager et le clavier.")
+                Text("Ajoute l'interrupteur Jyro dans le Centre de contrôle (zone torche / économiseur). iPhone ne permet pas à une app d'afficher un bouton flottant par-dessus les autres apps — c'est pourquoi Jyro passe par le menu Partager, le clavier et la détection du copié.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Toggle(isOn: Binding(
+                    get: { model.autoTranslate },
+                    set: { model.setAutoTranslate($0) }
+                )) {
+                    Label("Détection auto du copié", systemImage: "doc.on.clipboard.fill")
+                }
+                Text("Quand tu ouvres Jyro après avoir copié un texte, il est rempli et traduit automatiquement.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

@@ -27,9 +27,9 @@ struct OnboardingView: View {
                         featureRow(icon: "cursorarrow.click.2", title: "Fonctionne partout, sans réglage",
                                    text: "Sélectionne un texte → Partager → Jyro : traduction instantanée. Aucune autorisation à donner.")
                         featureRow(icon: "arrow.up.message.fill", title: "Réponds direct",
-                                   text: "Écris ta réponse, Jyro la traduit et la copie prête à coller.")
-                        featureRow(icon: "pip.fill", title: "Carte flottante",
-                                   text: "Fais flotter ta traduction au-dessus de toutes les apps, comme une vidéo en réduit (gamme PLAYit).")
+                                   text: "Écris ta réponse, Jyro la traduit et la copie prête à coller — ou utilise le clavier Jyro pour l'écrire direct dans la conversation.")
+                        featureRow(icon: "doc.on.clipboard.fill", title: "Coller → traduire",
+                                   text: "Copie un message puis ouvre Jyro : il est rempli et traduit automatiquement.")
                         featureRow(icon: "bolt.fill", title: "Gratuit, sans clé",
                                    text: "Réseaux neuronaux Google + secours MyMemory. Aucun compte.")
                     }

@@ -12,10 +12,10 @@ struct RootView: View {
             .tag(0)
 
             NavigationStack {
-                FloatSettingsView()
+                ReplyView()
             }
             .tabItem {
-                Label("Bouton", systemImage: "pip.fill")
+                Label("Répondre", systemImage: "arrow.up.message.fill")
             }
             .tag(1)
 
