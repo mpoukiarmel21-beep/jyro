@@ -24,9 +24,9 @@ iOS (sans jailbreak) interdit à toute app d'afficher une fenêtre flottante au-
 2. Télécharger `Jyro.ipa` depuis la Release.
 3. Ouvrir **Sideloadly**, connecter l'iPhone, glisser l'IPA, entrer ton Apple ID, *Start*.
 4. Réglages → Général → Gestion VPN & appareils → approuver le profil.
-5. **(A)** Sélectionner un texte → **Partager → Jyro**.
-6. **(B) Clavier Jyro** : Réglages → Général → Clavier → Claviers → *Ajouter un clavier* → **Jyro**. Puis Réglages → Général → Clavier → Claviers → toucher **Jyro** → activer **« Autoriser l'accès complet »** (requis pour la lecture du texte copié et la traduction réseau depuis le clavier).
-7. Dans une conversation : copie le message reçu → ouvre Jyro en clavier → [📋 Copié] → écris ta réponse → [▶ Répondre].
+5. À la **première ouverture de l'app**, un écran d'accueil explique tout : **aucune autorisation à donner**, Jyro fonctionne directement via le menu Partager.
+6. **(A)** Sélectionner un texte → **Partager → Jyro**.
+7. **(B) Clavier Jyro** *(optionnel)* : dans l'app, Réglages → Général → Clavier → Claviers → *Ajouter un clavier* → **Jyro**, puis activer **« Autoriser l'accès complet »** dans Jyro. Ces 3 étapes sont détaillées dans l'écran d'accueil de l'app (le clavier est le seul point qui exige un réglage Apple, impossible à automatiser — Jyro fonctionne à 100 % sans lui).
 
 ## Développement
 
