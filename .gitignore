@@ -1,0 +1,15 @@
+# Build
+build/
+DerivedData/
+Payload/
+*.ipa
+*.xcworkspace
+*.xcodeproj
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Xcode user state
+xcuserdata/
+*.xcuserstate

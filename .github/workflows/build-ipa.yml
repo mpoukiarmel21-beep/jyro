@@ -1,0 +1,76 @@
+name: build-ipa
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag de la Release (ex: v1.0.1)"
+        required: false
+        default: "v1.0"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Resolve Xcode
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | head -1)"
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Build unsigned
+        run: |
+          xcodebuild \
+            -project Jyro.xcodeproj \
+            -scheme Jyro \
+            -configuration Release \
+            -derivedDataPath build \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Package IPA
+        run: |
+          APP_DIR="build/Build/Products/Release-iphoneos"
+          mkdir -p Payload
+          cp -R "$APP_DIR/Jyro.app" Payload/
+          zip -qry Jyro.ipa Payload
+          ls -la Jyro.ipa
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Jyro-ipa
+          path: Jyro.ipa
+          if-no-files-found: error
+
+      - name: Create/Update Release
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.event.inputs.tag }}"
+          echo "::notice::Release tag: $TAG"
+          gh release create "$TAG" Jyro.ipa \
+            --title "Jyro $TAG" \
+            --notes "Jyro — traduction universelle (iOS). IPA non signée : installe-la avec Sideloadly." \
+            --repo "${{ github.repository }}" \
+            || gh release upload "$TAG" Jyro.ipa --clobber --repo "${{ github.repository }}"
